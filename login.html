@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Amino</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white min-h-screen flex items-center justify-center">
+
+  <div class="w-full max-w-sm px-6 py-10 bg-white rounded-xl shadow-lg">
+    <!-- Logo y frase -->
+    <div class="flex flex-col items-center">
+      <img src="images/logo_Amino.svg" alt="Logo Amino" class="w-32 mb-4" />
+      <p class="text-center text-gray-600 mb-6">
+        Conecta, comparte y vende<br>sin complicaciones.
+      </p>
+    </div>
+
+    <!-- Formulario -->
+    <form class="space-y-4">
+      <!-- Email -->
+      <div class="relative">
+        <img src="images/Message.svg" alt="Ícono Email" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-50" />
+        <input id="email" type="email" placeholder="Email"
+          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-400"
+          required />
+      </div>
+
+      <!-- Contraseña -->
+      <div class="relative">
+        <img src="images/Lock.svg" alt="Ícono Contraseña" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-50" />
+        <input id="password" type="password" placeholder="Contraseña"
+          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-400"
+          required />
+      </div>
+
+      <!-- Botón -->
+      <button id="loginBtn" type="submit" disabled
+        class="w-full py-2 font-semibold rounded-lg bg-[rgba(174,213,205,0.3)] text-gray-500 cursor-not-allowed transition">
+        Logearse
+      </button>
+    </form>
+
+    <!-- Recuperar contraseña -->
+    <div class="text-center mt-4">
+      <a href="#" class="text-sm text-gray-500 hover:underline">¿Olvidaste tu contraseña?</a>
+    </div>
+  </div>
+
+  <!-- Script para activar botón solo si los campos están llenos -->
+  <script>
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+
+    function toggleButton() {
+      const filled = emailInput.value.trim() && passwordInput.value.trim();
+      if (filled) {
+        loginBtn.disabled = false;
+        loginBtn.classList.remove('bg-[rgba(174,213,205,0.3)]', 'cursor-not-allowed', 'text-gray-500');
+        loginBtn.classList.add('bg-[#AED5CD]', 'cursor-pointer', 'text-gray-800');
+      } else {
+        loginBtn.disabled = true;
+        loginBtn.classList.remove('bg-[#AED5CD]', 'cursor-pointer', 'text-gray-800');
+        loginBtn.classList.add('bg-[rgba(174,213,205,0.3)]', 'cursor-not-allowed', 'text-gray-500');
+      }
+    }
+
+    emailInput.addEventListener('input', toggleButton);
+    passwordInput.addEventListener('input', toggleButton);
+  </script>
+
+</body>
+</html>
