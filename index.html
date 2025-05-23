@@ -37,6 +37,41 @@
       </div>
     </div>
 
+    <!-- Enlaces -->
+    <div id="linksCard" class="w-full max-w-sm bg-white rounded-2xl shadow-lg p-4 space-y-3">
+      <div id="linksList" class="space-y-2"></div>
+      <button id="addLinkBtn" class="w-full bg-[#7A9BAE] hover:bg-[#9EB6C7] text-white font-medium py-3 rounded-lg transition">
+        + Añadir enlace
+      </button>
+    </div>
+
+    <!-- Redes Sociales -->
+    <div id="socialCard" class="w-full max-w-sm bg-white rounded-2xl shadow-lg p-4 space-y-2">
+      <h2 class="text-sm text-[#587288] font-semibold">Redes sociales</h2>
+      <div id="socialLinks" class="flex justify-center space-x-4 text-2xl text-[#7A9BAE]">
+        <a href="#" aria-label="Instagram" target="_blank" id="igLink">📸</a>
+        <a href="#" aria-label="Twitter" target="_blank" id="twLink">🐦</a>
+        <a href="#" aria-label="LinkedIn" target="_blank" id="lnLink">💼</a>
+      </div>
+      <!-- Botones para editar -->
+      <div id="socialEdit" class="hidden flex flex-col space-y-2 mt-3">
+        <input id="igInput" type="text" placeholder="URL Instagram" class="w-full px-4 py-2 border border-gray-200 rounded-lg" />
+        <input id="twInput" type="text" placeholder="URL Twitter/X" class="w-full px-4 py-2 border border-gray-200 rounded-lg" />
+        <input id="lnInput" type="text" placeholder="URL LinkedIn" class="w-full px-4 py-2 border border-gray-200 rounded-lg" />
+        <button id="saveSocialBtn" class="bg-[#7A9BAE] hover:bg-[#9EB6C7] text-white py-2 rounded-lg font-medium">Guardar redes</button>
+      </div>
+      <button id="editSocialBtn" class="text-xs text-[#587288] underline mt-2">Editar redes</button>
+    </div>
+
+    <!-- Botón de contacto -->
+    <a href="https://wa.me/18095555555" target="_blank" class="w-full max-w-sm text-center bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition">
+      Escríbeme por WhatsApp
+    </a>
+
+    <!-- Footer -->
+    <footer class="mt-10 text-sm text-gray-400 text-center">
+      Hecho con 💙 en <a href="https://amino.com.co" class="underline text-[#7A9BAE]" target="_blank">Amino</a>
+    </footer>
   </div>
 
   <!-- JS -->
