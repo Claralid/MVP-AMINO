@@ -1,70 +1,96 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login Amino</title>
+  <title>Login - Amino</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            aminoDark: "#50525D",
-            aminoBlue: "#B7D9EC",
-            aminoGreen: "#AED5CD",
-            aminoViolet: "#CDB5E7"
-          }
-        }
-      }
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #F9FAFB; }
+    .input-mock {
+      border-radius: 14px;
+      border: 1.5px solid #E5E7EB;
+      background: #fff;
+      font-size: 1rem;
+      padding: 0.75rem 1.1rem;
+      outline: none;
+      transition: border 0.2s;
     }
-  </script>
+    .input-mock:focus {
+      border: 1.5px solid #B6D9ED;
+    }
+    .btn-mock {
+      border-radius: 16px;
+      background: #B6D9ED;
+      color: #fff;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 0.9rem 0;
+      transition: background 0.2s;
+      box-shadow: 0 2px 6px #b6d9ed25;
+    }
+    .btn-mock:hover {
+      background: #a4cbe0;
+      color: #fff;
+    }
+    .card-mock {
+      border-radius: 24px;
+      border: 1.5px solid #ECECEC;
+      background: #fff;
+      box-shadow: 0 4px 16px 0 #dbeafe40;
+      padding: 2rem 1.3rem;
+      position: relative;
+    }
+  </style>
 </head>
-<body class="bg-white min-h-screen flex items-center justify-center">
-  <div class="w-full max-w-xs mx-auto flex flex-col items-center">
-    <!-- LOGO AMINO -->
-    <div class="flex flex-col items-center mb-8 mt-2">
-      <div class="flex items-center space-x-2">
-        <span class="font-extrabold text-5xl" style="color:#50525D;">Amino</span>
-        <span class="relative flex items-center">
-          <span class="block w-6 h-6 rounded-full" style="background-color: #AED5CD; margin-left:-12px; margin-top:-16px;"></span>
-          <span class="block w-10 h-10 rounded-full" style="background-color: #B7D9EC; margin-left:-15px; margin-top:2px;"></span>
-          <span class="block w-4 h-4 rounded-full" style="background-color: #CDB5E7; margin-left:-6px; margin-top:-18px;"></span>
-        </span>
-      </div>
-      <p class="text-aminoDark text-center mt-2 text-base font-normal">
-        Conecta, comparte y vende<br>sin complicaciones.
-      </p>
+<body class="flex items-center justify-center min-h-screen">
+  <div class="w-full max-w-sm mx-auto flex flex-col items-center">
+    <!-- LOGO -->
+    <img src="/images/logo_Amino.svg" alt="Amino" class="w-38 mb-2" />
+    <div class="text-center text-gray-700 font-medium mb-4">
+      Conecta, comparte y vende<br>sin complicaciones.
     </div>
-    <!-- FORMULARIO LOGIN -->
-    <form class="w-full flex flex-col gap-4">
-      <div class="relative">
-        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-aminoDark/40">
-          <!-- Email icon -->
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <rect width="20" height="14" x="2" y="5" rx="2" />
-            <path d="M2 7l10 6 10-6" />
-          </svg>
-        </span>
-        <input type="email" placeholder="Email" class="w-full pl-10 pr-3 py-3 rounded-lg border border-aminoGreen/40 bg-white text-aminoDark focus:outline-none focus:border-aminoGreen transition" required>
-      </div>
-      <div class="relative">
-        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-aminoDark/40">
-          <!-- Lock icon -->
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <rect width="16" height="11" x="4" y="11" rx="2"/>
-            <path d="M8 11V7a4 4 0 118 0v4"/>
-          </svg>
-        </span>
-        <input type="password" placeholder="Contraseña" class="w-full pl-10 pr-3 py-3 rounded-lg border border-aminoGreen/40 bg-white text-aminoDark focus:outline-none focus:border-aminoGreen transition" required>
-      </div>
-      <button type="submit" class="w-full mt-1 py-3 rounded-lg bg-aminoGreen/30 text-aminoDark font-semibold text-lg hover:bg-aminoGreen/50 transition">
-        Logearse
-      </button>
-    </form>
-    <a href="#" class="mt-5 text-aminoDark/60 text-sm hover:underline">
+
+    <!-- LOGIN CARD -->
+    <div class="card-mock w-full flex flex-col gap-4">
+      <form class="w-full flex flex-col gap-3">
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#B6D9ED]">
+            <i data-lucide="mail" class="w-5 h-5"></i>
+          </span>
+          <input type="email" class="input-mock w-full pl-10" placeholder="Email" required />
+        </div>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#B6D9ED]">
+            <i data-lucide="lock" class="w-5 h-5"></i>
+          </span>
+          <input type="password" class="input-mock w-full pl-10" placeholder="Contraseña" required />
+        </div>
+        <button type="submit" class="btn-mock mt-2">Logearse</button>
+      </form>
+    </div>
+    <a href="#" class="block mt-4 text-gray-500 text-center text-sm hover:underline">
       ¿Olvidaste tu contraseña?
     </a>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+
+    // Demo: Redirigir al dashboard al hacer login
+    document.querySelector('form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      window.location.href = "index.html";
+    });
+  });
+    
+  </script>
 </body>
 </html>
