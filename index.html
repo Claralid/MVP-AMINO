@@ -103,6 +103,12 @@
       <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-xl text-gray-600 hover:bg-blue-50 hover:text-blue-700">
         <i data-lucide="settings" class="w-5 h-5"></i> Configuración
       </a>
+      <!-- Botón cerrar sesión -->
+<button id="logoutBtn" class="mt-8 flex items-center gap-2 px-4 py-2 rounded-xl bg-[#E18B8B] text-white font-semibold w-[85%] mx-auto hover:bg-[#c76e6e] transition">
+  <i data-lucide="log-out" class="w-5 h-5"></i>
+  Cerrar sesión
+</button>
+
     </nav>
   </aside>
 
@@ -1114,6 +1120,15 @@ saveSocialsBtn.addEventListener('click', () => {
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
     });
+
+
+// Botón cerrar sesión (logout)
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', function() {
+    window.location.href = "login.html";
+  });
+}
 
 
 </script>
