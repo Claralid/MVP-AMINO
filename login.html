@@ -1,75 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login Amino</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            aminoDark: "#50525D",
+            aminoBlue: "#B7D9EC",
+            aminoGreen: "#AED5CD",
+            aminoViolet: "#CDB5E7"
+          }
+        }
+      }
+    }
+  </script>
 </head>
 <body class="bg-white min-h-screen flex items-center justify-center">
-
-  <div class="w-full max-w-sm px-6 py-10 bg-white rounded-xl shadow-lg">
-    <!-- Logo y frase -->
-    <div class="flex flex-col items-center">
-      <img src="images/logo_Amino.svg" alt="Logo Amino" class="w-32 mb-4" />
-      <p class="text-center text-gray-600 mb-6">
+  <div class="w-full max-w-xs mx-auto flex flex-col items-center">
+    <!-- LOGO AMINO -->
+    <div class="flex flex-col items-center mb-8 mt-2">
+      <div class="flex items-center space-x-2">
+        <span class="font-extrabold text-5xl" style="color:#50525D;">Amino</span>
+        <span class="relative flex items-center">
+          <span class="block w-6 h-6 rounded-full" style="background-color: #AED5CD; margin-left:-12px; margin-top:-16px;"></span>
+          <span class="block w-10 h-10 rounded-full" style="background-color: #B7D9EC; margin-left:-15px; margin-top:2px;"></span>
+          <span class="block w-4 h-4 rounded-full" style="background-color: #CDB5E7; margin-left:-6px; margin-top:-18px;"></span>
+        </span>
+      </div>
+      <p class="text-aminoDark text-center mt-2 text-base font-normal">
         Conecta, comparte y vende<br>sin complicaciones.
       </p>
     </div>
-
-    <!-- Formulario -->
-    <form class="space-y-4">
-      <!-- Email -->
+    <!-- FORMULARIO LOGIN -->
+    <form class="w-full flex flex-col gap-4">
       <div class="relative">
-        <img src="images/Message.svg" alt="Ícono Email" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-50" />
-        <input id="email" type="email" placeholder="Email"
-          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-400"
-          required />
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-aminoDark/40">
+          <!-- Email icon -->
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect width="20" height="14" x="2" y="5" rx="2" />
+            <path d="M2 7l10 6 10-6" />
+          </svg>
+        </span>
+        <input type="email" placeholder="Email" class="w-full pl-10 pr-3 py-3 rounded-lg border border-aminoGreen/40 bg-white text-aminoDark focus:outline-none focus:border-aminoGreen transition" required>
       </div>
-
-      <!-- Contraseña -->
       <div class="relative">
-        <img src="images/Lock.svg" alt="Ícono Contraseña" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-50" />
-        <input id="password" type="password" placeholder="Contraseña"
-          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-400"
-          required />
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-aminoDark/40">
+          <!-- Lock icon -->
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect width="16" height="11" x="4" y="11" rx="2"/>
+            <path d="M8 11V7a4 4 0 118 0v4"/>
+          </svg>
+        </span>
+        <input type="password" placeholder="Contraseña" class="w-full pl-10 pr-3 py-3 rounded-lg border border-aminoGreen/40 bg-white text-aminoDark focus:outline-none focus:border-aminoGreen transition" required>
       </div>
-
-      <!-- Botón -->
-      <button id="loginBtn" type="submit" disabled
-        class="w-full py-2 font-semibold rounded-lg bg-[rgba(174,213,205,0.3)] text-gray-500 cursor-not-allowed transition">
+      <button type="submit" class="w-full mt-1 py-3 rounded-lg bg-aminoGreen/30 text-aminoDark font-semibold text-lg hover:bg-aminoGreen/50 transition">
         Logearse
       </button>
     </form>
-
-    <!-- Recuperar contraseña -->
-    <div class="text-center mt-4">
-      <a href="#" class="text-sm text-gray-500 hover:underline">¿Olvidaste tu contraseña?</a>
-    </div>
+    <a href="#" class="mt-5 text-aminoDark/60 text-sm hover:underline">
+      ¿Olvidaste tu contraseña?
+    </a>
   </div>
-
-  <!-- Script para activar botón solo si los campos están llenos -->
-  <script>
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const loginBtn = document.getElementById('loginBtn');
-
-    function toggleButton() {
-      const filled = emailInput.value.trim() && passwordInput.value.trim();
-      if (filled) {
-        loginBtn.disabled = false;
-        loginBtn.classList.remove('bg-[rgba(174,213,205,0.3)]', 'cursor-not-allowed', 'text-gray-500');
-        loginBtn.classList.add('bg-[#AED5CD]', 'cursor-pointer', 'text-gray-800');
-      } else {
-        loginBtn.disabled = true;
-        loginBtn.classList.remove('bg-[#AED5CD]', 'cursor-pointer', 'text-gray-800');
-        loginBtn.classList.add('bg-[rgba(174,213,205,0.3)]', 'cursor-not-allowed', 'text-gray-500');
-      }
-    }
-
-    emailInput.addEventListener('input', toggleButton);
-    passwordInput.addEventListener('input', toggleButton);
-  </script>
-
 </body>
 </html>
