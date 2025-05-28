@@ -67,6 +67,22 @@
     .closeSectionBtn:hover {
       background: #F3F5F8;
     }
+
+    .modal-sheet {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  box-shadow: 0 -4px 18px rgba(27,46,139,0.1);
+  padding: 1.5rem;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  z-index: 70;
+}
+.modal-sheet.open {
+  transform: translateY(0);
+}
   </style>
 </head>
 <body class="text-gray-800">
@@ -115,7 +131,7 @@
     <!-- Overlay (móvil) -->
   <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-40 z-30 hidden lg:hidden"></div>
 
-<main class="max-w-md mx-auto p-4"  style="min-width:300px; width:400px;">
+<main class="mx-auto relative overflow-hidden" style="width:100%;">
 
 
  
@@ -151,13 +167,13 @@
   <div id="dynamicSections"></div>
 
   <!-- MENU DE SELECCIÓN DE SECCIÓN -->
-  <div id="sectionPicker" class="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-8 transition-all duration-300 transform translate-y-full z-[70]">
+  <div id="sectionPicker" class="absolute bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-8 transition-transform duration-300 transform translate-y-full z-[70]">
     
     <div class="flex justify-between items-center mb-6">
       <h3 class="text-xl font-bold text-gray-700">Choose a section</h3>
       <button id="closeSectionPicker"><i data-lucide="x" class="w-7 h-7 text-gray-500"></i></button>
     </div>
-    <div class="grid grid-cols-3 gap-4">
+    <div class="grid grid-cols-4 gap-4">
       <button class="chooseSectionBtn card-mock py-6 flex flex-col items-center" data-section="socialCard">
         <i data-lucide="users" class="w-8 h-8 mb-2 text-[#B6D9ED]"></i>
         Social Links
@@ -191,9 +207,35 @@
   Image Block
 </button>
 
+<button class="chooseSectionBtn card-mock py-6 flex flex-col items-center" data-section="mapCard">
+  <i data-lucide="map-pin" class="w-8 h-8 mb-2 text-[#B6D9ED]"></i>
+  Map
+</button>
+
+<!-- dentro de <div class="grid grid-cols-4 gap-4"> de tu sectionPicker -->
+<button class="chooseSectionBtn card-mock py-6 flex flex-col items-center" data-section="bubbleContact">
+  <i data-lucide="message-circle" class="w-8 h-8 mb-2 text-[#B6D9ED]"></i>
+  Contact Bubble
+</button>
+
+<!-- Formulario de Contacto -->
+<button class="chooseSectionBtn card-mock py-6 flex flex-col items-center" data-section="contactFormCard">
+  <i data-lucide="edit-2" class="w-8 h-8 mb-2 text-[#B6D9ED]"></i>
+  Contact Form
+</button>
+
+<!-- Quiz -->
+<button class="chooseSectionBtn card-mock py-6 flex flex-col items-center" data-section="quizCard">
+  <i data-lucide="award" class="w-8 h-8 mb-2 text-[#B6D9ED]"></i>
+  Quiz
+</button>
+
+
     </div>
 
   </div>
+
+
 
   <!-- ====== SECCIONES DINÁMICAS (todas con display:none) ====== -->
 
@@ -263,12 +305,67 @@
     <button id="addGalleryImgBtn" class="btn-mock w-full mt-2">+ Add Image</button>
   </div>
 
- 
+ <!-- MÓDULO DE MAPA -->
+<div id="mapCard" class="card-mock mb-6" style="display:none; position: relative;">
+  <div class="flex justify-between items-center mb-2">
+    <span class="font-semibold text-lg text-gray-700">Map</span>
+    <!-- El close ya lo añade tu función addCloseBtn -->
+  </div>
+  <div id="mapContainer" class="w-full h-64 bg-gray-200 rounded-lg overflow-hidden"></div>
+  <button id="editMapBtn" class="btn-mock w-full mt-2">Edit Map</button>
+</div>
+
+
+<!-- ===== MÓDULO: Contact Bubble ===== -->
+<div id="bubbleContact" class="fixed bottom-6 right-6 z-80 flex flex-col items-end space-y-2">
+  <!-- PANEL DE ICONOS (oculto por defecto) -->
+  <div id="contactIcons" class="hidden bg-white shadow-super rounded-lg p-2 flex flex-col space-y-2">
+    <!-- Los íconos se inyectan por JS -->
+  </div>
+  <!-- BURBUJA PRINCIPAL -->
+  <button id="toggleContactBubble" 
+          class="w-14 h-14 bg-[#B6D9ED] rounded-full shadow-super text-white flex items-center justify-center">
+    <i data-lucide="message-circle" class="w-6 h-6"></i>
+  </button>
+  <!-- BOTÓN “Edit” EN MODO BUILDER -->
+  <button id="editContactBubbleBtn" class="btn-mock w-full mt-2">Edit Contact Bubble</button>
+</div>
+
+
+<!-- ===== MÓDULO: Contact Form ===== -->
+<div id="contactFormCard" class="card-mock mb-6" style="display:none; position: relative;">
+  <div class="flex justify-between items-center mb-2">
+    <span class="font-semibold text-lg text-gray-700">Contact Form</span>
+  </div>
+  <form id="contactFormFront" class="space-y-4">
+    <input id="cfName" type="text" placeholder="Tu Nombre" class="input-mock w-full"/>
+    <input id="cfEmail" type="email" placeholder="Tu Email" class="input-mock w-full"/>
+    <textarea id="cfMessage" placeholder="Tu Mensaje" class="input-mock w-full resize-none" rows="4"></textarea>
+    <button type="submit" class="btn-mock w-full">Enviar</button>
+  </form>
+  <button id="editContactFormBtn" class="btn-mock w-full mt-2">Edit Contact Form</button>
+</div>
+
+<!-- ===== MÓDULO: Quiz ===== -->
+<div id="quizCard" class="card-mock mb-6" style="display:none; position: relative;">
+  <div class="flex justify-between items-center mb-2">
+    <span class="font-semibold text-lg text-gray-700">Quiz</span>
+  </div>
+  <div id="quizFront" class="space-y-4">
+    <div id="quizQuestion" class="font-medium"></div>
+    <div id="quizOptions" class="flex flex-col space-y-2"></div>
+    <button id="submitQuizBtn" class="btn-mock w-full">Responder</button>
+    <div id="quizResult" class="mt-2 font-semibold"></div>
+  </div>
+  <button id="editQuizBtn" class="btn-mock w-full mt-2">Edit Quiz</button>
+</div>
+
+
 
 
   <!-- AQUÍ VAN TODOS LOS BOTTOM SHEETS Y VIEWERS DE TODAS LAS SECCIONES (PUEDES PEDÍRMELOS UNO A UNO SI QUIERES MÁS CORTO, O AVÍSAME PARA PEGÁRTELOS AQUÍ EN BLOQUE) -->
 <!-- ==== MODAL: Editar Perfil ==== -->
-<div id="profileEditor" class="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full z-50">
+<div id="profileEditor" class="absolute bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full">
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-lg font-semibold">Editar perfil</h3>
     <button id="closeSheet"><i data-lucide="x" class="w-6 h-6 text-gray-500"></i></button>
@@ -285,7 +382,7 @@
 </div>
 
 <!-- ==== MODAL: Redes Sociales ==== -->
-<div id="socialEditor" class="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full z-50">
+<div id="socialEditor" class="absolute bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full">
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-lg font-semibold">Editar redes</h3>
     <button id="closeSocialEditor"><i data-lucide="x" class="w-6 h-6 text-gray-500"></i></button>
@@ -302,7 +399,7 @@
 
 
 <!-- ==== MODAL: Custom Links ==== -->
-<div id="linkEditor" class="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full z-50">
+<div id="linkEditor" class="absolute bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full">
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-lg font-semibold" id="linkEditorTitle">Add Link</h3>
     <button id="closeLinkEditor"><i data-lucide="x" class="w-6 h-6 text-gray-500"></i></button>
@@ -313,7 +410,7 @@
 </div>
 
 <!-- ==== MODAL: Products ==== -->
-<div id="productEditor" class="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full z-50">
+<div id="productEditor" class="absolute bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full">
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-lg font-semibold" id="productEditorTitle">Add Product</h3>
     <button id="closeProductEditor"><i data-lucide="x" class="w-6 h-6 text-gray-500"></i></button>
@@ -326,7 +423,7 @@
 </div>
 
 <!-- ==== MODAL: Videos ==== -->
-<div id="videoEditor" class="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full z-50">
+<div id="videoEditor" class="absolute bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full">
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-lg font-semibold" id="videoEditorTitle">Add Video</h3>
     <button id="closeVideoEditor"><i data-lucide="x" class="w-6 h-6 text-gray-500"></i></button>
@@ -337,7 +434,7 @@
 </div>
 
 <!-- ==== MODAL: Testimonials ==== -->
-<div id="testimonialEditor" class="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full z-50">
+<div id="testimonialEditor" class="absolute bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full">
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-lg font-semibold" id="testimonialEditorTitle">Add Testimonial</h3>
     <button id="closeTestimonialEditor"><i data-lucide="x" class="w-6 h-6 text-gray-500"></i></button>
@@ -348,7 +445,7 @@
 </div>
 
 <!-- ==== MODAL: Documents ==== -->
-<div id="documentEditor" class="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full z-50">
+<div id="documentEditor" class="absolute bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full">
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-lg font-semibold" id="documentEditorTitle">Add Document</h3>
     <button id="closeDocumentEditor"><i data-lucide="x" class="w-6 h-6 text-gray-500"></i></button>
@@ -358,7 +455,7 @@
   <div id="documentFilePreview" class="mb-4 text-sm text-gray-500"></div>
   <button id="saveDocumentBtn" class="btn-mock w-full">Guardar</button>
 </div>
-<div id="docViewer" class="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full z-[60]">
+<div id="docViewer" class="absolute bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full">
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-lg font-bold text-gray-700" id="docViewerTitle">Preview</h3>
     <button id="closeDocViewer"><i data-lucide="x" class="w-7 h-7 text-gray-500"></i></button>
@@ -367,7 +464,7 @@
 </div>
 
 <!-- ==== MODAL: Galería ==== -->
-<div id="galleryImgEditor" class="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full z-50">
+<div id="galleryImgEditor" class="absolute bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full">
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-xl font-bold text-gray-700" id="galleryEditorTitle">Add Image</h3>
     <button id="closeGalleryImgEditor"><i data-lucide="x" class="w-7 h-7 text-gray-500"></i></button>
@@ -379,7 +476,7 @@
   <input id="galleryImgTitle" type="text" placeholder="Image title (optional)" class="input-mock mb-6 w-full" />
   <button id="saveGalleryImgBtn" class="btn-mock w-full">Guardar</button>
 </div>
-<div id="galleryViewer" class="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full z-[60]">
+<div id="galleryViewer" class="absolute bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full">
   <div class="flex justify-between items-center mb-4">
     <h3 class="text-lg font-bold text-gray-700" id="galleryViewerTitle">Image</h3>
     <button id="closeGalleryViewer"><i data-lucide="x" class="w-7 h-7 text-gray-500"></i></button>
@@ -402,6 +499,92 @@
   </button>
 </div>
 
+<!-- Bloque Mapa editable -->
+
+<div id="mapEditor" class="modal-sheet" data-modal="mapEditor">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-lg font-semibold">Editar Mapa</h3>
+    <button data-modal-close="mapEditor">
+      <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+    </button>
+  </div>
+  <input id="mapAddressInput" type="text"
+         placeholder="Escribe dirección o lugar..."
+         class="input-mock mb-4 w-full"/>
+  <button id="saveMapBtn" class="btn-mock w-full">Guardar</button>
+</div>
+
+
+<!-- Bloque burbuja editable -->
+
+
+<div id="contactBubbleEditor" class="modal-sheet" data-modal="contactBubbleEditor">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-lg font-semibold">Configurar Contact Bubble</h3>
+    <button data-modal-close="contactBubbleEditor">
+      <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+    </button>
+  </div>
+  <form class="space-y-4">
+    <div>
+      <label class="inline-flex items-center">
+        <input type="checkbox" id="optEmail" class="mr-2"/> Email
+      </label>
+      <input id="inputEmail" type="email" placeholder="tu@correo.com"
+             class="input-mock w-full mt-1" />
+    </div>
+    <div>
+      <label class="inline-flex items-center">
+        <input type="checkbox" id="optWhatsApp" class="mr-2"/> WhatsApp
+      </label>
+      <input id="inputWhatsApp" type="tel" placeholder="+1234567890"
+             class="input-mock w-full mt-1" />
+    </div>
+    <div>
+      <label class="inline-flex items-center">
+        <input type="checkbox" id="optPhone" class="mr-2"/> Teléfono
+      </label>
+      <input id="inputPhone" type="tel" placeholder="+1234567890"
+             class="input-mock w-full mt-1" />
+    </div>
+  </form>
+  <button id="saveContactBubbleBtn" class="btn-mock w-full mt-4">Guardar</button>
+</div>
+
+
+
+<!-- Builder: Contact Form -->
+<div id="contactFormEditor" class="modal-sheet" data-modal="contactFormEditor">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-lg font-semibold">Configurar Contact Form</h3>
+    <button data-modal-close="contactFormEditor"><i data-lucide="x" class="w-6 h-6"></i></button>
+  </div>
+  <input id="cfOwnerEmail" type="email" placeholder="Email receptor" class="input-mock w-full mb-4"/>
+  <button id="saveContactFormBtn" class="btn-mock w-full">Guardar</button>
+</div>
+
+<!-- Builder: Quiz -->
+<div id="quizEditor" class="modal-sheet" data-modal="quizEditor">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-lg font-semibold">Configurar Quiz</h3>
+    <button data-modal-close="quizEditor"><i data-lucide="x" class="w-6 h-6"></i></button>
+  </div>
+  <div class="space-y-3">
+    <input id="qeQuestion" type="text" placeholder="Pregunta" class="input-mock w-full"/>
+    <input id="qeOpt1" type="text" placeholder="Opción 1" class="input-mock w-full"/>
+    <input id="qeOpt2" type="text" placeholder="Opción 2" class="input-mock w-full"/>
+    <input id="qeOpt3" type="text" placeholder="Opción 3" class="input-mock w-full"/>
+    <input id="qeOpt4" type="text" placeholder="Opción 4" class="input-mock w-full"/>
+    <label class="font-medium">Respuesta Correcta:</label>
+    <select id="qeAnswer" class="input-mock w-full">
+      <option value="1">Opción 1</option>
+      <option value="2">Opción 2</option>
+      <option value="3">Opción 3</option>
+      <option value="4">Opción 4</option>
+    </select>
+  </div>
+  <button id="saveQuizBtn" class="btn-mock w-full mt-4">Guardar</button>
+</div>
 
 
   <!-- Para no exceder el límite de caracteres aquí, dime si los quieres TODOS aquí pegados, o una sección a la vez (sociales, links, productos, video, galería, documentos, testimonios y sus scripts completos, uno a uno o juntos). -->
@@ -415,6 +598,7 @@
    (perfil, sociales, links, productos, videos, galería, testimonios, documentos)
    aquí abajo. Así tú solo copias, pegas y lanzas.
 */
+
 document.addEventListener('DOMContentLoaded', () => {
   lucide.createIcons();
 
@@ -426,11 +610,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const chooseSectionBtns = document.querySelectorAll('.chooseSectionBtn');
 
   // IDs de secciones disponibles (ajusta según tus IDs)
- const sections = [
-  'socialCard', 'linksCard', 'productsCard',
-  'videosCard', 'testimonialsCard', 'documentsCard', 'galleryCard',
-  'imageBlockCard'
-];
+
+
+
+
+
 
 
   // Inicialmente oculta todas las secciones (menos perfil)
@@ -450,19 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sectionPicker.classList.add('translate-y-full');
   });
 
-  // Elegir una sección
-  chooseSectionBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = btn.dataset.section;
-      const section = document.getElementById(id);
-      if (section && !dynamicSections.contains(section)) {
-        section.style.display = "";
-        dynamicSections.appendChild(section);
-        addCloseBtn(section);
-      }
-      sectionPicker.classList.add('translate-y-full');
-    });
-  });
+ 
 
   // Agregar botón "X" para quitar la sección (solo si no existe)
   function addCloseBtn(section) {
@@ -501,9 +673,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const chooseSectionBtns = document.querySelectorAll('.chooseSectionBtn');
 
 const sections = [
-  'socialCard', 'linksCard', 'productsCard',
-  'videosCard', 'testimonialsCard', 'documentsCard', 'galleryCard',
-  'imageBlockCard'
+  'socialCard','linksCard','productsCard',
+  'videosCard','testimonialsCard','documentsCard',
+  'galleryCard','imageBlockCard','mapCard' ,'bubbleContact','contactFormCard','quizCard'
 ];
 
 
@@ -1241,6 +1413,283 @@ removeImageBlockBtn.addEventListener('click', () => {
 });
 
 
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+
+  // ————— gestión de secciones —————
+  const dynamicSections    = document.getElementById('dynamicSections');
+  const sectionPicker      = document.getElementById('sectionPicker');
+  const addSectionBtn      = document.getElementById('addSectionBtn');
+  const closeSectionPicker = document.getElementById('closeSectionPicker');
+  const chooseSectionBtns  = document.querySelectorAll('.chooseSectionBtn');
+  const sections = [
+    'socialCard','linksCard','productsCard','videosCard',
+    'testimonialsCard','documentsCard','galleryCard',
+    'imageBlockCard','mapCard'
+  ];
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
+
+  addSectionBtn.addEventListener('click', () => {
+    sectionPicker.classList.remove('translate-y-full');
+    lucide.createIcons();
+  });
+  closeSectionPicker.addEventListener('click', () => {
+    sectionPicker.classList.add('translate-y-full');
+  });
+
+  chooseSectionBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.section;
+      const section = document.getElementById(id);
+      if (section && !dynamicSections.contains(section)) {
+        section.style.display = "";
+        dynamicSections.appendChild(section);
+        addCloseBtn(section);
+      }
+      sectionPicker.classList.add('translate-y-full');
+    });
+  });
+
+  function addCloseBtn(section) {
+    if (!section.querySelector('.closeSectionBtn')) {
+      const closeBtn = document.createElement('button');
+      closeBtn.className = "closeSectionBtn";
+      closeBtn.innerHTML = `<i data-lucide="x" class="w-6 h-6"></i>`;
+      closeBtn.addEventListener('click', () => section.style.display = "none");
+      section.appendChild(closeBtn);
+      lucide.createIcons();
+    }
+  }
+
+  // ————— módulo de mapa —————
+  let mapAddress = '';
+  const editMapBtn     = document.getElementById('editMapBtn');
+  const saveMapBtn     = document.getElementById('saveMapBtn');
+  const mapContainer   = document.getElementById('mapContainer');
+  const mapAddressInput = document.getElementById('mapAddressInput');
+  const mapModal       = document.querySelector('.modal-sheet[data-modal="mapEditor"]');
+
+  editMapBtn.addEventListener('click', () => {
+    mapAddressInput.value = mapAddress;
+    mapModal.classList.add('open');
+    lucide.createIcons();
+  });
+
+  saveMapBtn.addEventListener('click', () => {
+    mapAddress = mapAddressInput.value.trim();
+    if (!mapAddress) return;
+    const embedUrl =
+      'https://www.google.com/maps?q=' +
+      encodeURIComponent(mapAddress) +
+      '&output=embed';
+    mapContainer.innerHTML = `
+      <iframe width="100%" height="100%" frameborder="0" style="border:0"
+        src="${embedUrl}" allowfullscreen>
+      </iframe>`;
+    mapModal.classList.remove('open');
+  });
+
+  // ————— toggle genérico de modales —————
+  document.body.addEventListener('click', e => {
+    if (e.target.closest('[data-modal-open]')) {
+      const id = e.target.closest('[data-modal-open]').dataset.modalOpen;
+      document.querySelector(`.modal-sheet[data-modal="${id}"]`).classList.add('open');
+    }
+    if (e.target.closest('[data-modal-close]')) {
+      const id = e.target.closest('[data-modal-close]').dataset.modalClose;
+      document.querySelector(`.modal-sheet[data-modal="${id}"]`).classList.remove('open');
+    }
+  });
+
+  // … aquí tu resto de módulos y el sidebar …
+
+});
+
+// — Contact Bubble Configurado por el dueño + Front para el usuario —
+let contactConfig = { email: '', whatsapp: '', phone: '' };
+
+const editContactBubbleBtn = document.getElementById('editContactBubbleBtn');
+const saveContactBubbleBtn = document.getElementById('saveContactBubbleBtn');
+const contactEditor       = document.querySelector('.modal-sheet[data-modal="contactBubbleEditor"]');
+const optEmail            = document.getElementById('optEmail');
+const optWhatsApp         = document.getElementById('optWhatsApp');
+const optPhone            = document.getElementById('optPhone');
+const inputEmail          = document.getElementById('inputEmail');
+const inputWhatsApp       = document.getElementById('inputWhatsApp');
+const inputPhone          = document.getElementById('inputPhone');
+
+const toggleContactBubble = document.getElementById('toggleContactBubble');
+const contactIcons        = document.getElementById('contactIcons');
+
+// Abrir modal de configuración
+editContactBubbleBtn.addEventListener('click', () => {
+  // Carga valores previos
+  optEmail.checked      = !!contactConfig.email;
+  optWhatsApp.checked   = !!contactConfig.whatsapp;
+  optPhone.checked      = !!contactConfig.phone;
+  inputEmail.value      = contactConfig.email;
+  inputWhatsApp.value   = contactConfig.whatsapp;
+  inputPhone.value      = contactConfig.phone;
+  contactEditor.classList.add('open');
+  lucide.createIcons();
+});
+
+// Guardar configuración
+saveContactBubbleBtn.addEventListener('click', () => {
+  contactConfig.email    = optEmail.checked    ? inputEmail.value.trim()    : '';
+  contactConfig.whatsapp = optWhatsApp.checked ? inputWhatsApp.value.trim() : '';
+  contactConfig.phone    = optPhone.checked    ? inputPhone.value.trim()    : '';
+  contactEditor.classList.remove('open');
+  renderContactIcons(); // Actualiza los íconos
+});
+
+// Mostrar/ocultar panel de íconos para el usuario
+toggleContactBubble.addEventListener('click', () => {
+  contactIcons.classList.toggle('hidden');
+});
+
+// Función que inyecta los íconos según config
+function renderContactIcons() {
+  contactIcons.innerHTML = '';
+  if (contactConfig.email) {
+    contactIcons.innerHTML += `
+      <a href="mailto:${contactConfig.email}" target="_blank" 
+         class="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
+        <i data-lucide="mail" class="w-6 h-6 text-[#7BA9C8]"></i>
+      </a>`;
+  }
+  if (contactConfig.whatsapp) {
+    const num = contactConfig.whatsapp.replace(/\D/g,'');
+    contactIcons.innerHTML += `
+      <a href="https://wa.me/${num}" target="_blank"
+         class="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
+        <i data-lucide="zap" class="w-6 h-6 text-[#25D366]"></i>
+      </a>`;
+  }
+  if (contactConfig.phone) {
+    const tel = contactConfig.phone.replace(/\D/g,'');
+    contactIcons.innerHTML += `
+      <a href="tel:${tel}"
+         class="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
+        <i data-lucide="phone" class="w-6 h-6 text-[#0077B5]"></i>
+      </a>`;
+  }
+  lucide.createIcons();
+}
+
+// Inicializa si ya había config previa
+renderContactIcons();
+
+
+// — Contact Form Module —
+let cfOwnerEmail = '';
+
+const editContactFormBtn = document.getElementById('editContactFormBtn');
+const saveContactFormBtn = document.getElementById('saveContactFormBtn');
+const cfOwnerEmailInput = document.getElementById('cfOwnerEmail');
+const contactFormModal = document.querySelector('.modal-sheet[data-modal="contactFormEditor"]');
+const contactFormFront  = document.getElementById('contactFormFront');
+
+editContactFormBtn.addEventListener('click', () => {
+  cfOwnerEmailInput.value = cfOwnerEmail;
+  contactFormModal.classList.add('open');
+  lucide.createIcons();
+});
+
+saveContactFormBtn.addEventListener('click', () => {
+  cfOwnerEmail = cfOwnerEmailInput.value.trim();
+  contactFormModal.classList.remove('open');
+});
+
+contactFormFront.addEventListener('submit', e => {
+  e.preventDefault();
+  if (!cfOwnerEmail) {
+    alert('El dueño debe configurar el email receptor.');
+    return;
+  }
+  const name    = document.getElementById('cfName').value.trim();
+  const email   = document.getElementById('cfEmail').value.trim();
+  const message = document.getElementById('cfMessage').value.trim();
+  if (!name || !email || !message) {
+    alert('Completa todos los campos.');
+    return;
+  }
+  // Usamos mailto:
+  const subject = encodeURIComponent(`Contacto de ${name}`);
+  const body    = encodeURIComponent(`${message}\n\nEmail remitente: ${email}`);
+  window.location.href = `mailto:${cfOwnerEmail}?subject=${subject}&body=${body}`;
+});
+
+// — Quiz Module —
+let quizConfig = { q:'', opts: [], answer:1 };
+
+const editQuizBtn    = document.getElementById('editQuizBtn');
+const saveQuizBtn    = document.getElementById('saveQuizBtn');
+const quizModal      = document.querySelector('.modal-sheet[data-modal="quizEditor"]');
+const qeQuestion     = document.getElementById('qeQuestion');
+const qeOpt1         = document.getElementById('qeOpt1');
+const qeOpt2         = document.getElementById('qeOpt2');
+const qeOpt3         = document.getElementById('qeOpt3');
+const qeOpt4         = document.getElementById('qeOpt4');
+const qeAnswer       = document.getElementById('qeAnswer');
+const quizQuestionEl = document.getElementById('quizQuestion');
+const quizOptionsEl  = document.getElementById('quizOptions');
+const submitQuizBtn  = document.getElementById('submitQuizBtn');
+const quizResultEl   = document.getElementById('quizResult');
+
+function renderQuizFront() {
+  quizQuestionEl.textContent = quizConfig.q;
+  quizOptionsEl.innerHTML = '';
+  quizConfig.opts.forEach((opt,i) => {
+    quizOptionsEl.innerHTML += `
+      <label class="flex items-center space-x-2">
+        <input type="radio" name="quizOpt" value="${i+1}"/>
+        <span>${opt}</span>
+      </label>`;
+  });
+}
+
+editQuizBtn.addEventListener('click', () => {
+  qeQuestion.value = quizConfig.q;
+  qeOpt1.value      = quizConfig.opts[0]||'';
+  qeOpt2.value      = quizConfig.opts[1]||'';
+  qeOpt3.value      = quizConfig.opts[2]||'';
+  qeOpt4.value      = quizConfig.opts[3]||'';
+  qeAnswer.value    = quizConfig.answer;
+  quizModal.classList.add('open');
+  lucide.createIcons();
+});
+
+saveQuizBtn.addEventListener('click', () => {
+  quizConfig.q      = qeQuestion.value.trim();
+  quizConfig.opts   = [qeOpt1.value, qeOpt2.value, qeOpt3.value, qeOpt4.value].map(s=>s.trim());
+  quizConfig.answer = parseInt(qeAnswer.value,10);
+  quizModal.classList.remove('open');
+  renderQuizFront();
+});
+
+submitQuizBtn.addEventListener('click', () => {
+  const chosen = document.querySelector('input[name="quizOpt"]:checked');
+  if (!chosen) {
+    alert('Selecciona una opción.');
+    return;
+  }
+  const val = parseInt(chosen.value,10);
+  if (val === quizConfig.answer) {
+    quizResultEl.textContent = '¡Correcto!';
+  } else {
+    quizResultEl.textContent = `Incorrecto. La respuesta es: ${quizConfig.opts[quizConfig.answer-1]}`;
+  }
+});
+
+// Al cargar por primera vez
+renderQuizFront();
 
 
 
