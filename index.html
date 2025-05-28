@@ -151,6 +151,7 @@
 
   <!-- MENU DE SELECCIÓN DE SECCIÓN -->
   <div id="sectionPicker" class="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-8 transition-all duration-300 transform translate-y-full z-[70]">
+    
     <div class="flex justify-between items-center mb-6">
       <h3 class="text-xl font-bold text-gray-700">Choose a section</h3>
       <button id="closeSectionPicker"><i data-lucide="x" class="w-7 h-7 text-gray-500"></i></button>
@@ -184,10 +185,18 @@
         <i data-lucide="image" class="w-8 h-8 mb-2 text-[#B6D9ED]"></i>
         Gallery
       </button>
+      <button class="chooseSectionBtn card-mock py-6 flex flex-col items-center" data-section="imageBlockCard">
+  <i data-lucide="image" class="w-8 h-8 mb-2 text-[#B6D9ED]"></i>
+  Image Block
+</button>
+
     </div>
+
   </div>
 
   <!-- ====== SECCIONES DINÁMICAS (todas con display:none) ====== -->
+
+
 
   <div id="socialCard" class="card-mock mb-6" style="display:none;">
   <div class="flex justify-between items-center mb-4">
@@ -252,6 +261,9 @@
     <div id="galleryGrid" class="grid grid-cols-3 gap-3 mb-3"></div>
     <button id="addGalleryImgBtn" class="btn-mock w-full mt-2">+ Add Image</button>
   </div>
+
+ 
+
 
   <!-- AQUÍ VAN TODOS LOS BOTTOM SHEETS Y VIEWERS DE TODAS LAS SECCIONES (PUEDES PEDÍRMELOS UNO A UNO SI QUIERES MÁS CORTO, O AVÍSAME PARA PEGÁRTELOS AQUÍ EN BLOQUE) -->
 <!-- ==== MODAL: Editar Perfil ==== -->
@@ -374,6 +386,23 @@
   <div id="galleryViewerContent" class="rounded-xl overflow-auto flex justify-center items-center" style="max-height: 60vh;"></div>
 </div>
 
+<!-- Bloque imagen editable -->
+<div id="imageBlockCard" class="card-mock mb-6" style="display:none; position: relative;">
+  <div class="flex flex-col items-center">
+    <img id="imageBlockImg" src="https://placehold.co/400x400" alt="Image Block" class="w-full aspect-square rounded-3xl object-cover mb-4" />
+    <h3 id="imageBlockTitle" class="text-center text-xl font-semibold mb-2">Título aquí</h3>
+    <p id="imageBlockText" class="text-center text-gray-600 px-4">Texto descriptivo o informativo debajo del título.</p>
+  </div>
+  <button id="editImageBlockBtn" class="closeSectionBtn" title="Editar bloque">
+    <i data-lucide="edit" class="w-6 h-6"></i>
+  </button>
+  <button class="closeSectionBtn" style="right: 3rem;" title="Quitar bloque" id="removeImageBlockBtn">
+    <i data-lucide="x" class="w-6 h-6"></i>
+  </button>
+</div>
+
+
+
   <!-- Para no exceder el límite de caracteres aquí, dime si los quieres TODOS aquí pegados, o una sección a la vez (sociales, links, productos, video, galería, documentos, testimonios y sus scripts completos, uno a uno o juntos). -->
 
 </main>
@@ -396,10 +425,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const chooseSectionBtns = document.querySelectorAll('.chooseSectionBtn');
 
   // IDs de secciones disponibles (ajusta según tus IDs)
-  const sections = [
-    'socialCard', 'linksCard', 'productsCard',
-    'videosCard', 'testimonialsCard', 'documentsCard', 'galleryCard'
-  ];
+ const sections = [
+  'socialCard', 'linksCard', 'productsCard',
+  'videosCard', 'testimonialsCard', 'documentsCard', 'galleryCard',
+  'imageBlockCard'
+];
+
 
   // Inicialmente oculta todas las secciones (menos perfil)
   sections.forEach(id => {
@@ -468,10 +499,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeSectionPicker = document.getElementById('closeSectionPicker');
   const chooseSectionBtns = document.querySelectorAll('.chooseSectionBtn');
 
-  const sections = [
-    'socialCard', 'linksCard', 'productsCard',
-    'videosCard', 'testimonialsCard', 'documentsCard', 'galleryCard'
-  ];
+const sections = [
+  'socialCard', 'linksCard', 'productsCard',
+  'videosCard', 'testimonialsCard', 'documentsCard', 'galleryCard',
+  'imageBlockCard'
+];
+
 
   // Ocultar todas las secciones (menos perfil)
   sections.forEach(id => {
@@ -1126,6 +1159,88 @@ if (logoutBtn) {
     window.location.href = "login.html";
   });
 }
+
+// --- BLOQUE IMAGEN EDITABLE ---
+// Referencias del bloque visible
+const imageBlockCard = document.getElementById('imageBlockCard');
+const editImageBlockBtn = document.getElementById('editImageBlockBtn');
+const removeImageBlockBtn = document.getElementById('removeImageBlockBtn');
+
+// Crear el modal editor solo una vez y agregarlo al body
+const imageBlockEditor = document.createElement('div');
+imageBlockEditor.id = 'imageBlockEditor';
+imageBlockEditor.className = 'fixed bottom-0 inset-x-0 bg-white rounded-t-2xl shadow-super p-6 transition-all duration-300 transform translate-y-full z-50';
+imageBlockEditor.innerHTML = `
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-lg font-semibold">Editar bloque de imagen</h3>
+    <button id="closeImageBlockEditor"><i data-lucide="x" class="w-6 h-6 text-gray-500"></i></button>
+  </div>
+  <input id="imageBlockFileInput" type="file" accept="image/*" class="block w-full text-sm text-gray-600 mb-4" />
+  <input id="imageBlockTitleInput" type="text" placeholder="Título" class="input-mock mb-4 w-full" />
+  <textarea id="imageBlockTextInput" placeholder="Texto descriptivo" class="input-mock w-full resize-none" rows="4"></textarea>
+  <button id="saveImageBlockBtn" class="btn-mock w-full mt-6">Guardar</button>
+`;
+document.body.appendChild(imageBlockEditor);
+
+// AHORA SÍ: referencias a los elementos internos del modal (¡ya existen!)
+const closeImageBlockEditorBtn = document.getElementById('closeImageBlockEditor');
+const saveImageBlockBtn = document.getElementById('saveImageBlockBtn');
+const imageBlockFileInput = document.getElementById('imageBlockFileInput');
+const imageBlockTitleInput = document.getElementById('imageBlockTitleInput');
+const imageBlockTextInput = document.getElementById('imageBlockTextInput');
+const imageBlockImg = imageBlockCard.querySelector('#imageBlockImg');
+const imageBlockTitle = imageBlockCard.querySelector('#imageBlockTitle');
+const imageBlockText = imageBlockCard.querySelector('#imageBlockText');
+
+let tempImageBlockURL = "";
+
+// Mostrar el modal cuando das click al lápiz
+editImageBlockBtn.addEventListener('click', () => {
+  imageBlockTitleInput.value = imageBlockTitle.textContent;
+  imageBlockTextInput.value = imageBlockText.textContent;
+  tempImageBlockURL = "";
+  imageBlockFileInput.value = '';
+  imageBlockEditor.classList.remove('translate-y-full');
+});
+
+// Cerrar el modal
+closeImageBlockEditorBtn.addEventListener('click', () => {
+  imageBlockEditor.classList.add('translate-y-full');
+  tempImageBlockURL = "";
+  imageBlockFileInput.value = '';
+});
+
+// Cargar nueva imagen
+imageBlockFileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      tempImageBlockURL = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Guardar cambios
+saveImageBlockBtn.addEventListener('click', () => {
+  if (tempImageBlockURL) {
+    imageBlockImg.src = tempImageBlockURL;
+  }
+  imageBlockTitle.textContent = imageBlockTitleInput.value || 'Título aquí';
+  imageBlockText.textContent = imageBlockTextInput.value || 'Texto descriptivo o informativo debajo del título.';
+  imageBlockEditor.classList.add('translate-y-full');
+  tempImageBlockURL = "";
+  imageBlockFileInput.value = '';
+});
+
+// Quitar el bloque
+removeImageBlockBtn.addEventListener('click', () => {
+  imageBlockCard.style.display = 'none';
+});
+
+
+
 
 
 </script>
